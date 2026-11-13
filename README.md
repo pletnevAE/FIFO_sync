@@ -109,7 +109,7 @@ Then:
 The number of stored words is the difference of the pointers modulo $2^{\mathrm{ADDR\\_WIDTH} + 1}$
 
 ```math
-N = (\mathrm{wr\_ptr} - \mathrm{rd\_ptr}) \bmod 2^{\mathrm{ADDR\\_WIDTH} + 1}, \qquad 0 \le N \le D
+N = (\mathrm{wr\_ptr} - \mathrm{rd\_ptr}) \bmod 2^{\mathrm{ADDR\_WIDTH} + 1}, \qquad 0 \le N \le D
 ```
 
 The extra bit is also needed to represent the value $N = D$ itself. All $D$ cells of the memory are usable.
