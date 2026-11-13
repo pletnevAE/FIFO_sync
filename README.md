@@ -72,7 +72,7 @@ In a synchronous FIFO both pointers are available in one clock domain, so the fi
 
 ### Circular buffer
 
-Inside the FIFO the words are stored in a memory array of $D = 2^{\mathrm{ADDR\_WIDTH}}$ cells (the FIFO depth). The access order is controlled by two pointers:
+Inside the FIFO the words are stored in a memory array of $D = 2^{\text{ADDR_WIDTH}}$ cells (the FIFO depth). The access order is controlled by two pointers:
 
 - **write pointer** `wr_ptr` - the address of the cell where the next written word will be placed;
 - **read pointer** `rd_ptr` - the address of the cell holding the oldest unread word.
@@ -106,10 +106,10 @@ Then:
 - the FIFO is **empty** if the pointers are completely equal (the same cell, the same lap);
 - the FIFO is **full** if the lower `ADDR_WIDTH` bits are equal, but the MSB differ (the same cell, but the writer is exactly one lap ahead).
 
-The number of stored words is the difference of the pointers modulo $2^{\mathrm{ADDR\_WIDTH} + 1}$
+The number of stored words is the difference of the pointers modulo $2^{\text{ADDR_WIDTH} + 1}$
 
 ```math
-N = (\mathrm{wr\_ptr} - \mathrm{rd\_ptr}) \bmod 2^{\mathrm{ADDR\_WIDTH} + 1}, \qquad 0 \le N \le D
+N = (\mathrm{wr\_ptr} - \mathrm{rd\_ptr}) \bmod 2^{\text{ADDR_WIDTH} + 1}, \qquad 0 \le N \le D
 ```
 
 The extra bit is also needed to represent the value $N = D$ itself. All $D$ cells of the memory are usable.
@@ -177,7 +177,7 @@ The FIFO is implemented as a single module **FIFO.v**:
   <img src="img/FIFO_architecture.png" alt="FIFO architecture">
 </p>
 
-1. **Memory**: the array `fifo_mem` of $2^{\mathrm{ADDR\_WIDTH}}$ words of `DATA_WIDTH` bits. The memory type is set by the synthesis attribute `ramstyle` taken from the `MEM_STYLE` parameter. The write is synchronous: thw word `data_in` is stored into the cell addressed by the lower `ADDR_WIDTH` bits of `wr_ptr`.
+1. **Memory**: the array `fifo_mem` of $2^{\text{ADDR_WIDTH}}$ words of `DATA_WIDTH` bits. The memory type is set by the synthesis attribute `ramstyle` taken from the `MEM_STYLE` parameter. The write is synchronous: thw word `data_in` is stored into the cell addressed by the lower `ADDR_WIDTH` bits of `wr_ptr`.
 2. **Pointers**: the write pointer `wr_ptr` and the read pointer `rd_ptr` are `ADDR_WIDTH + 1` bits wide. They are updated on the clock edge when the corresponding operation is allowed. The next values `wr_ptr_next` and `rd_ptr_next` are used to calculate the flags.
 3. **Operation qualification**: the requests are accepted only when they are possible:
     - a write operation occurs when the FIFO is not full and the write enable signal is asserted;
@@ -203,7 +203,7 @@ Key implementation features:
 
 - asynchronous Active-Low reset (`rst_n`);
 - parameterization of data width, depth, flag thresholds and memory type;
-- full capacity; all $2^{\mathrm{ADDR\_WIDTH}}$ cells are usable;
+- full capacity; all $2^{\text{ADDR_WIDTH}}$ cells are usable;
 - full/empty detection using pointers with an extra bit, without a separate counter;
 - First-Word Fall-Through read;
 - protection against overflow and underflow;
@@ -219,7 +219,7 @@ Key implementation features:
 | :--: | :--: | :--: |
 | `DATA_WIDTH` | 8 | Input and output data width |
 | `ADDR_WIDTH` | 4 | FIFO address width |
-| `ALMOST_FULL_VAL` | $2^{\mathrm{ADDR\_WIDTH}} - 2$ | Number of stored words at which `almost_full` is asserted (occupancy $\ge$ value) |
+| `ALMOST_FULL_VAL` | $2^{\text{ADDR_WIDTH}} - 2$ | Number of stored words at which `almost_full` is asserted (occupancy $\ge$ value) |
 | `ALMOST_EMPTY_VAL` | 2 | Number of stored words at which `almost_empty` is asserted (occupancy $\le$ value) |
 | `MEM_STYLE` | "M9K" | Memory type: `"logic"` - flip-flops, `"M9K"` - block RAM of MAX10 |
 
@@ -262,7 +262,7 @@ Simulation is performed in ModelSim 10.6d using the SystemVerilog testbench (**t
 | `RAND_CYCLES` | 1000 | Number of iterations of the random test |
 | `DATA_WIDTH` | 8 | Input and output data width |
 | `ADDR_WIDTH` | 4 | Address width |
-| `ALMOST_FULL_VAL` | $2^{\mathrm{ADDR\_WIDTH}} - 2$ | Almost full threshold |
+| `ALMOST_FULL_VAL` | $2^{\text{ADDR_WIDTH}} - 2$ | Almost full threshold |
 | `ALMOST_EMPTY_VAL` | 2 | Almost empty threshold |
 | `MEM_STYLE` | `"M9K"` | Memory type |
 
